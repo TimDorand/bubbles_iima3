@@ -4,7 +4,7 @@
 
 var colonnes, lignes, largeur_ecran, hauteur_ecran,
     largeur_case, hauteur_case, diametre_bulle,
-    bulles, apple, temps_explosition, distance_apparition, score,
+    bulles, apple, vitesse_agrandissement, score,
 
     scoreTextValue, textStyle_Key, textStyle_Value;
 
@@ -37,8 +37,6 @@ var Game = {
             [1, 0, 0, 0, 0, 1, 1, 1],
             [1, 0, 1, 1, 1, 1, 1, 1]
         ];
-        temps_explosition = {};
-        distance_apparition = {};
         score = 0;
         bulle = {}; // objet bulle
 
@@ -90,34 +88,72 @@ var Game = {
 
     generateBubble: function(i, y) {
 
+
+        // Première bulle
+
+
         var graphisme_bulle = game.add.graphics();
         graphisme_bulle.beginFill(0xabb99, 1);
         graphisme_bulle.drawCircle(-999, -999, diametre_bulle);
 
         var positionX = y*largeur_case;
-        if(positionX == 0){
-            positionX = positionX + 3;
-        }
+            positionX = positionX + largeur_case/2;
         var positionY = i*hauteur_case;
-
-        if(positionY == 0){
-            positionY = positionY + 3;
-        }
+            positionY = positionY + hauteur_case/2;
         console.log('x = '+y+"*"+largeur_case+"="+positionX+'|| y = '+i+"*"+hauteur_case+"="+positionY);
 
+
+
         var bulle = game.add.sprite(positionX, positionY, graphisme_bulle.generateTexture());
+        bulle.anchor.setTo(0.5, 0.5);
 
         bulle.inputEnabled = true;
         bulle.input.useHandCursor = true;
         //if you want a hand
         bulle.events.onInputDown.add(cliqueBulle, this);
 
+        // Seconde bulle
+
+        var diametre_bulle_interne = game.rnd.realInRange(0, (diametre_bulle)/1.3);
+        var graphisme_bulle_interne = game.add.graphics();
+        graphisme_bulle_interne.beginFill(0x00000, 1);
+        graphisme_bulle_interne.drawCircle(-999, -999, diametre_bulle_interne);
+
+
+
+        console.log('x = '+y+"*"+largeur_case+"="+positionX+'|| y = '+i+"*"+hauteur_case+"="+positionY);
+
+        var bulle_interne = game.add.sprite(positionX, positionY, graphisme_bulle_interne.generateTexture());
+
+        bulle_interne.anchor.setTo(0.5, 0.5);
+        game.add.tween(diametre_bulle_interne.scale).to({ x: diametre_bulle, y: diametre_bulle}, 2000, autoStart=true);
+
+        
+
+
+        // Temps d'explosion
+
+        vitesse_agrandissement = game.rnd.realInRange(0, (diametre_bulle)/1.3);
+
+
+        // Action du clique sur la bulle
+
         function cliqueBulle(bulle){
             bulle.destroy();
+            bulle_interne.destroy();
             score = score +1;
-
-            console.log(score)
+            console.log("Score:"+score);
         }
+
+        // Action du clique sur la bulle
+        function perdBulle(bulle){
+            bulle.destroy();
+            bulle_interne.destroy();
+            score = score - 1;
+            console.log("Score:"+score);
+
+        }
+
 
     }
 };
