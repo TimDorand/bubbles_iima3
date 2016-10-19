@@ -105,10 +105,19 @@ var Game = {
         }
         console.log('x = '+y+"*"+largeur_case+"="+positionX+'|| y = '+i+"*"+hauteur_case+"="+positionY);
 
-        bulle = game.add.sprite(positionX, positionY, graphisme_bulle.generateTexture());
+        var bulle = game.add.sprite(positionX, positionY, graphisme_bulle.generateTexture());
 
+        bulle.inputEnabled = true;
+        bulle.input.useHandCursor = true;
+        //if you want a hand
+        bulle.events.onInputDown.add(cliqueBulle, this);
+
+        function cliqueBulle(bulle){
+            bulle.destroy();
+            score = score +1;
+
+            console.log(score)
+        }
 
     }
-
-
 };
