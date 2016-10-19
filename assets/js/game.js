@@ -2,15 +2,11 @@
  * Created by Tim on 19/10/2016.
  */
 
-var colonnes, lignes, largeur_ecran, hauteur_ecran ,
+var colonnes, lignes, largeur_ecran, hauteur_ecran,
     largeur_case, hauteur_case, diametre_bulle,
-    nombre_de_bulles, bulles, temps_explosition, distance_apparition, score, bulle,
+    bulles, apple, temps_explosition, distance_apparition, score,
 
-    // snak
-    snake, apple, squareSize, speed,
-    updateDelay, direction, new_direction,
-    addNew, cursors, scoreTextValue, speedTextValue,
-    textStyle_Key, textStyle_Value;
+    scoreTextValue, textStyle_Key, textStyle_Value;
 
 var Game = {
 
@@ -44,8 +40,9 @@ var Game = {
         temps_explosition = {};
         distance_apparition = {};
         score = 0;
+        bulle = {}; // objet bulle
 
-        game.stage.backgroundColor = '#eeddd';
+        game.stage.backgroundColor = '#eee';
 
 
         console.log(largeur_ecran+" x "+hauteur_ecran);
@@ -61,34 +58,13 @@ var Game = {
                 if(bulles[i][y] == 1){
                     // Afficher la bulle
                     // ex: case x=2 et y=3  || i = 2, y = 3; i * largeur case, y * hauteur case
-                    var bulle = game.add.graphics();
-                    bulle.beginFill(0xabb99, 1);
-                    bulle.drawCircle(-999, -999, diametre_bulle);
 
-                    var positionX = y*largeur_case;
-                    var positionY = i*hauteur_case;
-                    console.log('x = '+y+"*"+largeur_case+"="+positionX+'|| y = '+i+"*"+hauteur_case+"="+positionY);
-
-                    afficherbulle = game.add.sprite(positionX, positionY, bulle.generateTexture());
-
-
+                    this.generateBubble(i, y);
                 }else{
                     // Rien afficher
                 }
-
-
-            // var randomX = Math.floor(Math.random() * 40 ) * squareSize,
-            //     randomY = Math.floor(Math.random() * 30 ) * squareSize;
-            // bulles[i] = game.add.sprite(randomX, randomY, bulle.generateTexture());
-
-            // snake[i] = game.add.sprite(150+i*squareSize, 150, 'snake');  // Parameters are (X coordinate, Y coordinate, image)
             }
         }
-
-
-        // Genereate the first apple.
-        // this.generateApple();
-
 
         // Add Text to top of game.
         textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" };
@@ -109,6 +85,29 @@ var Game = {
         // The update function is called constantly at a high rate (somewhere around 60fps),
         // updating the game field every time.
         // We are going to leave that one empty for now.
+    },
+
+
+    generateBubble: function(i, y) {
+
+        var graphisme_bulle = game.add.graphics();
+        graphisme_bulle.beginFill(0xabb99, 1);
+        graphisme_bulle.drawCircle(-999, -999, diametre_bulle);
+
+        var positionX = y*largeur_case;
+        if(positionX == 0){
+            positionX = positionX + 3;
+        }
+        var positionY = i*hauteur_case;
+
+        if(positionY == 0){
+            positionY = positionY + 3;
+        }
+        console.log('x = '+y+"*"+largeur_case+"="+positionX+'|| y = '+i+"*"+hauteur_case+"="+positionY);
+
+        bulle = game.add.sprite(positionX, positionY, graphisme_bulle.generateTexture());
+
+
     }
 
 
