@@ -3,7 +3,8 @@
  */
 
 var colonnes, lignes, largeur_ecran, hauteur_ecran,
-    largeur_case, hauteur_case, diametre_bulle,
+    largeur_case, hauteur_case, diametre_bulle, diametre_bulle_interne,
+    bulle_interne, nombredebulles,
     bulles, apple, vitesse_agrandissement, score,
 
     scoreTextValue, textStyle_Key, textStyle_Value;
@@ -37,8 +38,8 @@ var Game = {
             [1, 0, 0, 0, 0, 1, 1, 1],
             [1, 0, 1, 1, 1, 1, 1, 1]
         ];
-        score = 0;
         bulle = {}; // objet bulle
+        nombredebulles =0;
 
         game.stage.backgroundColor = '#eee';
 
@@ -54,8 +55,10 @@ var Game = {
                 // y = 1 = premier chiffre du talbeau
 
                 if(bulles[i][y] == 1){
+                    nombredebulles = nombredebulles+1;
                     // Afficher la bulle
                     // ex: case x=2 et y=3  || i = 2, y = 3; i * largeur case, y * hauteur case
+                    score = nombredebulles;
 
                     this.generateBubble(i, y);
                 }else{
@@ -65,25 +68,13 @@ var Game = {
         }
 
         // Add Text to top of game.
-        textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" };
-        textStyle_Value = { font: "bold 18px sans-serif", fill: "#fff", align: "center" };
-
-        // Score.
-        game.add.text(30, 20, "SCORE", textStyle_Key);
-        scoreTextValue = game.add.text(90, 18, score.toString(), textStyle_Value);
-        // Speed.
+       // Speed.
         // game.add.text(500, 20, "SPEED", textStyle_Key);
         // speedTextValue = game.add.text(558, 18, speed.toString(), textStyle_Value);
 
     },
 
 
-
-    update: function() {
-        // The update function is called constantly at a high rate (somewhere around 60fps),
-        // updating the game field every time.
-        // We are going to leave that one empty for now.
-    },
 
 
     generateBubble: function(i, y) {
@@ -107,14 +98,15 @@ var Game = {
         var bulle = game.add.sprite(positionX, positionY, graphisme_bulle.generateTexture());
         bulle.anchor.setTo(0.5, 0.5);
 
+        // CLIQUE
         bulle.inputEnabled = true;
         bulle.input.useHandCursor = true;
-        //if you want a hand
         bulle.events.onInputDown.add(cliqueBulle, this);
+
 
         // Seconde bulle
 
-        var diametre_bulle_interne = game.rnd.realInRange(0, (diametre_bulle)/1.3);
+        diametre_bulle_interne = game.rnd.realInRange((diametre_bulle*0.2), (diametre_bulle*0.9));
         var graphisme_bulle_interne = game.add.graphics();
         graphisme_bulle_interne.beginFill(0x00000, 1);
         graphisme_bulle_interne.drawCircle(-999, -999, diametre_bulle_interne);
@@ -126,14 +118,18 @@ var Game = {
         var bulle_interne = game.add.sprite(positionX, positionY, graphisme_bulle_interne.generateTexture());
 
         bulle_interne.anchor.setTo(0.5, 0.5);
-        game.add.tween(diametre_bulle_interne.scale).to({ x: diametre_bulle, y: diametre_bulle}, 2000, autoStart=true);
 
-        
+        vitesse_agrandissement = game.rnd.realInRange(5000,20000 );
 
 
-        // Temps d'explosion
+        // Animation de la bulle interne
+        var augmentation = (diametre_bulle/diametre_bulle_interne);
+        var animate = game.add.tween(bulle_interne.scale).to({ x: augmentation, y: augmentation}, vitesse_agrandissement, Phaser.Easing.Linear.None, true)
 
-        vitesse_agrandissement = game.rnd.realInRange(0, (diametre_bulle)/1.3);
+        animate.onComplete.add(perdBulle, this);
+
+
+        // Score
 
 
         // Action du clique sur la bulle
@@ -141,18 +137,37 @@ var Game = {
         function cliqueBulle(bulle){
             bulle.destroy();
             bulle_interne.destroy();
-            score = score +1;
+            score = score + (bulle_interne.width/100)+1;
+
             console.log("Score:"+score);
+
         }
 
         // Action du clique sur la bulle
         function perdBulle(bulle){
-            bulle.destroy();
-            bulle_interne.destroy();
+            // bulle.destroy();
+            // bulle_interne.destroy();
             score = score - 1;
+
             console.log("Score:"+score);
 
         }
+
+
+    },
+
+
+    update: function() {
+        // The update function is called constantly at a high rate (somewhere around 60fps),
+        // updating the game field every time.
+        // We are going to leave that one empty for now.
+        textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" };
+        textStyle_Value = { font: "bold 18px sans-serif", fill: "#fff", align: "center" };
+
+        // Score.
+        scoreTextValue = score.toString();
+        game.add.text(30, 20, "SCORE", textStyle_Key);
+        scoreTextValue = game.add.text(90, 18, score.toString(), textStyle_Value);
 
 
     }
