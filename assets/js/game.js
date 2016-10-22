@@ -110,7 +110,7 @@ var Game = {
 
         diametre_bulle_interne = game.rnd.realInRange((diametre_bulle*0.2), (diametre_bulle*0.8));
         var graphisme_bulle_interne = game.add.graphics();
-        graphisme_bulle_interne.beginFill(0x00000, 1);
+        graphisme_bulle_interne.beginFill(0xeeeeee, 1);
         graphisme_bulle_interne.drawCircle(-999, -999, diametre_bulle_interne);
 
 
@@ -120,6 +120,7 @@ var Game = {
         var bulle_interne = game.add.sprite(positionX, positionY, graphisme_bulle_interne.generateTexture());
 
         bulle_interne.anchor.setTo(0.5, 0.5);
+        bulle.tint = Math.random() * 0xffffff ;
 
         vitesse_agrandissement = game.rnd.realInRange(5000,16000 );
 
