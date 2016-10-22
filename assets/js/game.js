@@ -197,6 +197,8 @@ var Game = {
             // Check if the head of the snake overlaps with any part of the snake.
             if(bulledestroyed == nombredebulles){
                 game.state.start('Game_Over');
+                score = Math.round(score);
+
             }
 
 
