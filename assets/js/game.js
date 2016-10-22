@@ -40,6 +40,7 @@ var Game = {
         ];
         bulle = {}; // objet bulle
         nombredebulles =0;
+        score  = 0;
 
         game.stage.backgroundColor = '#eee';
 
@@ -58,7 +59,7 @@ var Game = {
                     nombredebulles = nombredebulles+1;
                     // Afficher la bulle
                     // ex: case x=2 et y=3  || i = 2, y = 3; i * largeur case, y * hauteur case
-                    score = nombredebulles;
+                    // score = nombredebulles;
 
                     this.generateBubble(i, y);
                 }else{
@@ -106,7 +107,7 @@ var Game = {
 
         // Seconde bulle
 
-        diametre_bulle_interne = game.rnd.realInRange((diametre_bulle*0.2), (diametre_bulle*0.7));
+        diametre_bulle_interne = game.rnd.realInRange((diametre_bulle*0.2), (diametre_bulle*0.8));
         var graphisme_bulle_interne = game.add.graphics();
         graphisme_bulle_interne.beginFill(0x00000, 1);
         graphisme_bulle_interne.drawCircle(-999, -999, diametre_bulle_interne);
@@ -119,20 +120,33 @@ var Game = {
 
         bulle_interne.anchor.setTo(0.5, 0.5);
 
-        vitesse_agrandissement = game.rnd.realInRange(8000,20000 );
+        vitesse_agrandissement = game.rnd.realInRange(5000,16000 );
 
 
         // Animation de la bulle interne
         var augmentation = (diametre_bulle/diametre_bulle_interne);
         var animate = game.add.tween(bulle_interne.scale).to({ x: augmentation, y: augmentation}, vitesse_agrandissement, Phaser.Easing.Linear.None, true)
 
-        animate.onComplete.add(perdBulle, this);
+        animate.onComplete.add(function(){
+
+            if(bulle.exists){
+
+                bulle.destroy();
+                bulle_interne.destroy();
+                if(score > 5){
+                    score = score -5;
+                    updateScore(score);
+                }
+            }
+            console.log(score);
+
+        });
 
 
         // Score
 
         textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" };
-        textStyle_Value = { font: "bold 18px sans-serif", fill: "#000", align: "center" };
+        textStyle_Value = { font: "bold 18px sans-serif", fill: "#BBB", align: "center" };
 
         // Score.
         textscore = game.add.text(30, 20, "SCORE", textStyle_Key);
@@ -145,23 +159,15 @@ var Game = {
         function cliqueBulle(bulle){
             bulle.destroy();
             bulle_interne.destroy();
-            updateScore(score + (bulle_interne.width/100)+1);
-
-            console.log("Score:"+score);
-
-        }
-
-        // Action du clique sur la bulle
-        function perdBulle(bulle){
-            // bulle.destroy();
-            // bulle_interne.destroy();
-            updateScore(score - 1);
+            score = score +1*(bulle_interne.width)/10;
+            updateScore(score);
 
             console.log("Score:"+score);
 
         }
 
         function updateScore(score){
+            score = Math.round(score);
             scoreTextValue.setText(score);
         }
 
