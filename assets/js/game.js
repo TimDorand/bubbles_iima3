@@ -5,7 +5,7 @@
 var colonnes, lignes, largeur_ecran, hauteur_ecran,
     largeur_case, hauteur_case, diametre_bulle, diametre_bulle_interne,
     bulle_interne, nombredebulles,
-    bulles, apple, vitesse_agrandissement, score, textscore,
+    bulles, apple, vitesse_agrandissement, score, textscore, bulledestroyed,
 
     scoreTextValue, textStyle_Key, textStyle_Value;
 
@@ -133,6 +133,8 @@ var Game = {
 
                 bulle.destroy();
                 bulle_interne.destroy();
+                bulledestroyed = bulledestroyed +1;
+
                 if(score > 5){
                     score = score -5;
                     updateScore(score);
@@ -153,12 +155,14 @@ var Game = {
         scoreTextValue = game.add.text(90, 18, null , textStyle_Value);
 
 
+        noMoreBubbles();
 
         // Action du clique sur la bulle
 
         function cliqueBulle(bulle){
             bulle.destroy();
             bulle_interne.destroy();
+            bulledestroyed = bulledestroyed +1;
             score = score +1*(bulle_interne.width)/10;
             updateScore(score);
 
@@ -171,10 +175,20 @@ var Game = {
             scoreTextValue.setText(score);
         }
 
+        function noMoreBubbles(){
+
+            // Check if the head of the snake overlaps with any part of the snake.
+            if(bulledestroyed == nombredebulles){
+                game.state.start('Game_Over');
+            }
+
+        }
+
 
 
 
     },
+
 
 
     update: function() {

@@ -9,7 +9,11 @@ var Menu = {
 
         // Add menu screen.
         // It will act as a button to start the game.
-        this.add.button(0, 0, 'menu', this.startGame, this);
+        // this.add.button(150, 150, null, this.startGame, this);
+        textscore = game.add.text(150, 150, "CLIQUEZ POUR COMMENCER !", textStyle_Key);
+        game.stage.backgroundColor = '#eee';
+
+
 
     },
 
