@@ -40,6 +40,7 @@ var Game = {
         ];
         bulle = {}; // objet bulle
         nombredebulles =0;
+        bulledestroyed = 0;
         score  = 0;
 
         game.stage.backgroundColor = '#eee';
@@ -138,6 +139,8 @@ var Game = {
                 if(score > 5){
                     score = score -5;
                     updateScore(score);
+                    // noMoreBubbles();
+
                 }
             }
             console.log(score);
@@ -155,7 +158,6 @@ var Game = {
         scoreTextValue = game.add.text(90, 18, null , textStyle_Value);
 
 
-        noMoreBubbles();
 
         // Action du clique sur la bulle
 
@@ -175,14 +177,7 @@ var Game = {
             scoreTextValue.setText(score);
         }
 
-        function noMoreBubbles(){
 
-            // Check if the head of the snake overlaps with any part of the snake.
-            if(bulledestroyed == nombredebulles){
-                game.state.start('Game_Over');
-            }
-
-        }
 
 
 
@@ -196,7 +191,17 @@ var Game = {
         // updating the game field every time.
         // We are going to leave that one empty for now.
 
+        function noMoreBubbles(){
 
+            console.log(bulledestroyed+' nombre de bulles= '+nombredebulles);
+            // Check if the head of the snake overlaps with any part of the snake.
+            if(bulledestroyed == nombredebulles){
+                game.state.start('Game_Over');
+            }
+
+
+        }
+        noMoreBubbles();
 
     }
 };
