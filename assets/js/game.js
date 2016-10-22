@@ -122,7 +122,7 @@ var Game = {
         bulle_interne.anchor.setTo(0.5, 0.5);
         bulle.tint = Math.random() * 0xffffff ;
 
-        vitesse_agrandissement = game.rnd.realInRange(5000,16000 );
+        vitesse_agrandissement = game.rnd.realInRange(8000,20000 );
 
 
         // Animation de la bulle interne
