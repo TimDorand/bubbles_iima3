@@ -5,7 +5,7 @@
 var colonnes, lignes, largeur_ecran, hauteur_ecran,
     largeur_case, hauteur_case, diametre_bulle, diametre_bulle_interne,
     bulle_interne, nombredebulles,
-    bulles, apple, vitesse_agrandissement, score,
+    bulles, apple, vitesse_agrandissement, score, textscore,
 
     scoreTextValue, textStyle_Key, textStyle_Value;
 
@@ -106,7 +106,7 @@ var Game = {
 
         // Seconde bulle
 
-        diametre_bulle_interne = game.rnd.realInRange((diametre_bulle*0.2), (diametre_bulle*0.9));
+        diametre_bulle_interne = game.rnd.realInRange((diametre_bulle*0.2), (diametre_bulle*0.7));
         var graphisme_bulle_interne = game.add.graphics();
         graphisme_bulle_interne.beginFill(0x00000, 1);
         graphisme_bulle_interne.drawCircle(-999, -999, diametre_bulle_interne);
@@ -119,7 +119,7 @@ var Game = {
 
         bulle_interne.anchor.setTo(0.5, 0.5);
 
-        vitesse_agrandissement = game.rnd.realInRange(5000,20000 );
+        vitesse_agrandissement = game.rnd.realInRange(8000,20000 );
 
 
         // Animation de la bulle interne
@@ -131,13 +131,21 @@ var Game = {
 
         // Score
 
+        textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" };
+        textStyle_Value = { font: "bold 18px sans-serif", fill: "#000", align: "center" };
+
+        // Score.
+        textscore = game.add.text(30, 20, "SCORE", textStyle_Key);
+        scoreTextValue = game.add.text(90, 18, null , textStyle_Value);
+
+
 
         // Action du clique sur la bulle
 
         function cliqueBulle(bulle){
             bulle.destroy();
             bulle_interne.destroy();
-            score = score + (bulle_interne.width/100)+1;
+            updateScore(score + (bulle_interne.width/100)+1);
 
             console.log("Score:"+score);
 
@@ -147,11 +155,17 @@ var Game = {
         function perdBulle(bulle){
             // bulle.destroy();
             // bulle_interne.destroy();
-            score = score - 1;
+            updateScore(score - 1);
 
             console.log("Score:"+score);
 
         }
+
+        function updateScore(score){
+            scoreTextValue.setText(score);
+        }
+
+
 
 
     },
@@ -161,13 +175,7 @@ var Game = {
         // The update function is called constantly at a high rate (somewhere around 60fps),
         // updating the game field every time.
         // We are going to leave that one empty for now.
-        textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" };
-        textStyle_Value = { font: "bold 18px sans-serif", fill: "#fff", align: "center" };
 
-        // Score.
-        scoreTextValue = score.toString();
-        game.add.text(30, 20, "SCORE", textStyle_Key);
-        scoreTextValue = game.add.text(90, 18, score.toString(), textStyle_Value);
 
 
     }
